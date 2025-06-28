@@ -1,4 +1,4 @@
-import os
+"""import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,5 +10,12 @@ class Settings:
     DB_PORT: str = os.getenv("DB_PORT", "3306")
     DB_NAME: str = os.getenv("DB_NAME", "tienda_db")
     DATABASE_URL = f"mariadb+mariadbconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+settings = Settings()"""
+
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    DATABASE_URL: str = "sqlite:///./app/database/database.db"
 
 settings = Settings()

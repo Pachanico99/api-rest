@@ -1,3 +1,4 @@
+import uuid
 from pydantic import BaseModel
 
 class ProductBase(BaseModel):
@@ -8,7 +9,7 @@ class ProductCreate(ProductBase):
     pass
 
 class Product(ProductBase):
-    product_id: int
+    id: uuid.UUID
 
     class Config:
-        from_attributes = True
+        orm_mode = True
