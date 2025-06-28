@@ -1,5 +1,9 @@
 fastapi
 uvicorn[standard]
 sqlalchemy
-mariadb
 python-dotenv
+pydantic
+aiosqlite
+pytest
+httpx
+pytest-asyncio

@@ -1,35 +1,16 @@
-import asyncio
-from contextlib import asynccontextmanager
+# main.py
+# Punto de entrada de la aplicación FastAPI
 from fastapi import FastAPI
-from app.database.database import Base, engine
-from app.src.product.controller import product_controller
-from app.src.cart.controller import cart_controller
-from app.src.cart.service.cart_service import cleanup_inactive_carts_task
+from app.producto.controlador.producto_controlador import router as producto_router
+from app.carrito.controlador.carrito_controlador import router as carrito_router
+from app.pago.controlador.pago_controlador import router as pago_router
+from app.database import Base, engine
 
+# Crear las tablas automáticamente al iniciar la app
 Base.metadata.create_all(bind=engine)
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    print("INFO:     Iniciando tarea en segundo plano para limpiar carritos inactivos.")
-    task = asyncio.create_task(cleanup_inactive_carts_task())
-    yield
-    print("INFO:     Cancelando tarea en segundo plano.")
-    task.cancel()
-    try:
-        await task
-    except asyncio.CancelledError:
-        print("INFO:     Tarea en segundo plano cancelada exitosamente.")
+app = FastAPI(title="API REST Carrito de Tienda de Ropa")
 
-app = FastAPI(
-    title="API de Carrito de Compras",
-    description="Implementación de un sistema de carritos con reglas de negocio complejas.",
-    version="1.0.0",
-    lifespan=lifespan
-)
-
-app.include_router(product_controller.router)
-app.include_router(cart_controller.router)
-
-@app.get("/", tags=["Root"])
-def read_root():
-    return {"message": "Bienvenido a la API de Carrito de Compras"}
+app.include_router(producto_router)
+app.include_router(carrito_router)
+app.include_router(pago_router)
